@@ -3,6 +3,8 @@
 ## 프로젝트 소개
 OSS 기반 SW 프로그래밍 4주차 GitHub Flow 및 코드리뷰 협업 실습을 위한 Python 계산기 프로젝트입니다.
 
+[5주차 비동기 협업 체계 구축 (Discussions/Wiki/ADR)](readme5.md)
+
 ## 실습 목표
 - Feature 브랜치를 활용한 기능 개발
 - Conventional Commits 형식 적용
