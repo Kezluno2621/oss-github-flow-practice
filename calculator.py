@@ -1,9 +1,15 @@
+
 # Simple Calculator
 # OSS GitHub Flow Practice
 
+
+def add(a: int, b: int) -> int:
+    return a + b
+
+
 def main():
     print("Simple Calculator")
-    print("Calculator project initialized.")
+    print("Addition result:", add(10, 5))
 
 
 if __name__ == "__main__":
