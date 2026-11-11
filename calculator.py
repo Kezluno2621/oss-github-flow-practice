@@ -3,7 +3,7 @@
 # OSS GitHub Flow Practice
 
 
-def add(a, b):
+def add(a: int, b: int) -> int:
     return a + b
 
 
@@ -14,4 +14,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-  
