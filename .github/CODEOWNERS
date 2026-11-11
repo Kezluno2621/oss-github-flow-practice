@@ -1,0 +1,11 @@
+# OSS GitHub Flow Practice - Code Owners
+
+# Default owner for all files
+* @Kezluno2621
+
+# Python source and test files
+*.py @Kezluno2621
+
+# GitHub configuration files
+/.github/ @Kezluno2621
+  
