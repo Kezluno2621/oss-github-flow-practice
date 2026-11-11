@@ -1,7 +1,7 @@
 
 import unittest
 
-from calculator import add, subtract
+from calculator import add, subtract, divide
 
 
 class TestCalculator(unittest.TestCase):
@@ -20,6 +20,19 @@ class TestCalculator(unittest.TestCase):
 
     def test_subtraction_with_zero(self):
         self.assertEqual(subtract(10, 0), 10)
+
+    def test_division(self):
+        self.assertEqual(divide(10, 2), 5.0)
+
+    def test_division_with_negative(self):
+        self.assertEqual(divide(-10, 2), -5.0)
+
+    def test_division_with_decimal(self):
+        self.assertEqual(divide(5, 2), 2.5)
+
+    def test_division_by_zero(self):
+        with self.assertRaises(ValueError):
+            divide(10, 0)
 
 
 if __name__ == "__main__":
