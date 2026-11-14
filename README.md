@@ -106,5 +106,8 @@ GitHub Rulesets 기능을 활용하여 `main` 브랜치 보호 규칙을 구성�
 - PR 템플릿 및 CODEOWNERS 설정
 - 협업 문서 작성 및 브랜치 보호 규칙 구성
 
-GitHub Flow의
+## CI/CD 조건부 실행 테스트
+
+OSS 8주차 과제에서 문서 변경 시 불필요한 Build 및 Test 작업이 생략되는지 확인하기 위한 테스트입니다.
+
   
