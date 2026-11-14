@@ -1,0 +1,28 @@
+name: Reusable Python Test
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        description: "Python version for testing"
+        required: true
+        type: string
+
+      os:
+        description: "Operating system for testing"
+        required: true
+        type: string
+
+jobs:
+  python-test:
+    name: Test (${{ inputs.os }}, Python ${{ inputs.python-version }})
+    runs-on: ${{ inputs.os }}
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Run Python quality checks
+        uses: ./.github/actions/python-check
+        with:
+          python-version: ${{ inputs.python-version }}
