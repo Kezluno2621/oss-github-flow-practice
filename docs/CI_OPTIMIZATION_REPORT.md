@@ -77,3 +77,19 @@ GitHub Actions 워크플로우에 재사용 구조, Matrix 확장, 캐싱 및 �
 - [캐싱 ON 최초 실행 #3](https://github.com/Kezluno2621/oss-github-flow-practice/actions/runs/43578392247)
 - [캐싱 ON 재실행 #4](https://github.com/Kezluno2621/oss-github-flow-practice/actions/runs/43578531047)
 - [최적화 워크플로우](https://github.com/Kezluno2621/oss-github-flow-practice/blob/main/.github/workflows/optimized-ci.yml)
+
+  
+## 8. 조건부 실행 검증 결과
+
+문서만 변경한 Pull Request #6에서 변경 파일 감지 기능을 검증하였다.
+
+- Detect Changes: Success
+- Build: Skipped
+- Matrix Test: Skipped
+- Deploy: Skipped
+
+문서 변경 시 불필요한 Build, Test, Deploy가 실행되지 않는 것을 확인하였다.
+
+- [검증 PR #6](https://github.com/Kezluno2621/oss-github-flow-practice/pull/6)
+- [조건부 실행 결과](https://github.com/Kezluno2621/oss-github-flow-practice/actions/runs/43588560488)
+
