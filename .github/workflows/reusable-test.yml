@@ -4,14 +4,20 @@ on:
   workflow_call:
     inputs:
       python-version:
-        description: "Python version for testing"
+        description: Python version
         required: true
         type: string
 
       os:
-        description: "Operating system for testing"
+        description: Runner operating system
         required: true
         type: string
+
+      use-cache:
+        description: Enable pip caching
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   python-test:
@@ -21,6 +27,20 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
+
+      - name: Find pip cache directory
+        if: inputs.use-cache
+        id: pip-cache
+        shell: bash
+        run: |
+          echo "dir=$(python -m pip cache dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache pip downloads
+        if: inputs.use-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: pip-${{ runner.os }}-${{ inputs.python-version }}-ruff-v1
 
       - name: Run Python quality checks
         uses: ./.github/actions/python-check
