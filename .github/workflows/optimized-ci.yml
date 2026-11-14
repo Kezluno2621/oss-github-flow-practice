@@ -1,0 +1,127 @@
+name: Optimized Python CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      use-cache:
+        description: Enable pip caching for comparison
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Detect changed files
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            code:
+              - '**/*.py'
+              - '.github/actions/**'
+              - '.github/workflows/**'
+
+  build:
+    name: Build
+    needs: changes
+    if: >-
+      ${{
+        needs.changes.outputs.code == 'true' ||
+        github.event_name == 'workflow_dispatch'
+      }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Build package
+        run: |
+          mkdir -p dist
+          python -m zipfile -c dist/calculator-package.zip calculator.py test_calculator.py README.md
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: optimized-calculator-build
+          path: dist/calculator-package.zip
+          if-no-files-found: error
+
+  test:
+    name: Matrix Test
+    needs: build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.11", "3.12", "3.13"]
+
+    uses: ./.github/workflows/reusable-test.yml
+
+    with:
+      os: ${{ matrix.os }}
+      python-version: ${{ matrix.python-version }}
+      use-cache: ${{ github.event_name == 'workflow_dispatch' && inputs.use-cache || github.event_name != 'workflow_dispatch' }}
+
+  deploy:
+    name: Deploy (Simulation)
+    needs: [changes, build, test]
+    if: >-
+      ${{
+        (github.event_name == 'push' &&
+        github.ref == 'refs/heads/main' &&
+        needs.changes.outputs.code == 'true') ||
+        github.event_name == 'workflow_dispatch'
+      }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: optimized-calculator-build
+          path: dist
+
+      - name: Check deployment secret
+        env:
+          DEPLOY_TOKEN: ${{ secrets.DEMO_DEPLOY_TOKEN }}
+        shell: bash
+        run: |
+          if [ -z "$DEPLOY_TOKEN" ]; then
+            echo "Deployment secret is missing"
+            exit 1
+          fi
+          echo "Deployment secret is configured"
+
+      - name: Simulate deployment
+        shell: bash
+        run: |
+          mkdir -p deployed
+          cp dist/calculator-package.zip deployed/
+          echo "Optimized CI/CD deployment completed" > deployed/status.txt
+
+      - name: Upload deployment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: optimized-deployment
+          path: deployed/
+          if-no-files-found: error
